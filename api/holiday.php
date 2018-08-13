@@ -1,8 +1,13 @@
 <?php
+	include '../common/api_import.php';
+
+	$steamContext = stream_context_create(array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false)));
+
 	$year = '2018';
 	$url = "https://www.gov.hk/en/about/abouthk/holiday/$year.htm";
 
-	$html = file_get_contents($url);
+	// $html = file_get_contents($url);
+	$html = file_get_contents($url, false, $steamContext);
 	$dom = new DOMDocument;
 	@$dom->loadHTML($html);
 
@@ -41,7 +46,7 @@
 		array_push($holidays, $sundayObj);
 	}
 
-	echo json_encode($holidays);
+	successResponse($holidays);
 
 	function getDateForSpecificDayBetweenDates($startDate, $endDate, $weekdayNumber) {
 	    $startDate = strtotime($startDate);
